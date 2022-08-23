@@ -53,6 +53,17 @@ public class RestauranteController {
         return ResponseEntity.ok(restaurantes);
     }
 
+    @GetMapping("/por-nome-e-frete")
+    public ResponseEntity<List<Restaurante>> listar(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal){
+        List<Restaurante> restaurantes = restauranteRepository.find(nome, taxaInicial, taxaFinal);
+
+        if(restaurantes.size() == 0){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(restaurantes);
+        }
+
+        return ResponseEntity.ok(restaurantes);
+    }
+
     @GetMapping("/por-nome-e-cozinha")
     public ResponseEntity<List<Restaurante>> consultaPorNomeECozinha(String nome, Long id){
         List<Restaurante> restaurantes = restauranteRepository.consultaPorNomeECozinhaId(nome, id);
