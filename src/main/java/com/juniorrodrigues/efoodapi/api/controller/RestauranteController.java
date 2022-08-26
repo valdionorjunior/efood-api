@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comFreteGratis;
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comNomeSemelhantes;
+
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -64,6 +67,14 @@ public class RestauranteController {
         return ResponseEntity.ok(restaurantes);
     }
 
+    @GetMapping("/frete-gratis")
+    public ResponseEntity<List<Restaurante>> listar(String nome){
+
+        List<Restaurante> restaurantes = restauranteRepository.findComFreteGratis(nome);
+
+        return ResponseEntity.ok(restaurantes);
+    }
+
     @GetMapping("/por-nome-e-cozinha")
     public ResponseEntity<List<Restaurante>> consultaPorNomeECozinha(String nome, Long id){
         List<Restaurante> restaurantes = restauranteRepository.consultaPorNomeECozinhaId(nome, id);
@@ -73,6 +84,13 @@ public class RestauranteController {
         }
 
         return ResponseEntity.ok(restaurantes);
+    }
+
+    @GetMapping("/busca-o-primeiro")
+    public ResponseEntity<Restaurante> buscaPrimeiroRestaurante(){
+        Optional<Restaurante> restaurante = restauranteRepository.findFirst();
+
+        return ResponseEntity.ok(restaurante.get());
     }
 
     @GetMapping("/{restauranteId}")
