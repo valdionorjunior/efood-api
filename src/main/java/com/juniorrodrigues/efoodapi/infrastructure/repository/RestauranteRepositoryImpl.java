@@ -5,27 +5,32 @@ package com.juniorrodrigues.efoodapi.infrastructure.repository;
 * */
 
 import com.juniorrodrigues.efoodapi.domain.model.Restaurante;
+import com.juniorrodrigues.efoodapi.domain.repository.RestauranteRepository;
 import com.juniorrodrigues.efoodapi.domain.repository.RestauranteRepositoryQueries;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comFreteGratis;
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comNomeSemelhantes;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired
+    @Lazy // faz com que não tomemos o erro de dependencia circular
+    private RestauranteRepository restauranteRepository;
 
     @Override
     public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
@@ -64,5 +69,11 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
 
         var query =  manager.createQuery(criteria);
         return query.getResultList();
+    }
+
+    @Override
+    public List<Restaurante> findComFreteGratis(String nome) {
+        return restauranteRepository.findAll(comFreteGratis()
+                .and(comNomeSemelhantes(nome)));
     }
 }

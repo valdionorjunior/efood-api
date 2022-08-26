@@ -70,8 +70,7 @@ public class RestauranteController {
     @GetMapping("/frete-gratis")
     public ResponseEntity<List<Restaurante>> listar(String nome){
 
-        List<Restaurante> restaurantes = restauranteRepository.findAll(comFreteGratis()
-                .and(comNomeSemelhantes(nome)));
+        List<Restaurante> restaurantes = restauranteRepository.findComFreteGratis(nome);
 
         return ResponseEntity.ok(restaurantes);
     }
