@@ -6,6 +6,8 @@ import com.juniorrodrigues.efoodapi.domain.exception.EntidadeNaoEncontradaExcept
 import com.juniorrodrigues.efoodapi.domain.model.Restaurante;
 import com.juniorrodrigues.efoodapi.domain.repository.RestauranteRepository;
 import com.juniorrodrigues.efoodapi.domain.service.CadastroRestauranteService;
+import com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestaurantesComFreteGratisSpec;
+import com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestaurantesComNomeSemelhanteSpec;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,6 +62,15 @@ public class RestauranteController {
         if(restaurantes.size() == 0){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(restaurantes);
         }
+
+        return ResponseEntity.ok(restaurantes);
+    }
+
+    @GetMapping("/frete-gratis")
+    public ResponseEntity<List<Restaurante>> listar(String nome){
+        var comFreteGratis = new RestaurantesComFreteGratisSpec();
+        var comNomeSemelhante = new RestaurantesComNomeSemelhanteSpec(nome);
+        List<Restaurante> restaurantes = restauranteRepository.findAll(comFreteGratis.or(comNomeSemelhante));
 
         return ResponseEntity.ok(restaurantes);
     }
