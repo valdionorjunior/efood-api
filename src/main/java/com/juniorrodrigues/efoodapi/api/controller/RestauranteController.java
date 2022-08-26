@@ -6,14 +6,15 @@ import com.juniorrodrigues.efoodapi.domain.exception.EntidadeNaoEncontradaExcept
 import com.juniorrodrigues.efoodapi.domain.model.Restaurante;
 import com.juniorrodrigues.efoodapi.domain.repository.RestauranteRepository;
 import com.juniorrodrigues.efoodapi.domain.service.CadastroRestauranteService;
-import com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestaurantesComFreteGratisSpec;
-import com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestaurantesComNomeSemelhanteSpec;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
+
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comFreteGratis;
+import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comNomeSemelhantes;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -68,9 +69,9 @@ public class RestauranteController {
 
     @GetMapping("/frete-gratis")
     public ResponseEntity<List<Restaurante>> listar(String nome){
-        var comFreteGratis = new RestaurantesComFreteGratisSpec();
-        var comNomeSemelhante = new RestaurantesComNomeSemelhanteSpec(nome);
-        List<Restaurante> restaurantes = restauranteRepository.findAll(comFreteGratis.or(comNomeSemelhante));
+
+        List<Restaurante> restaurantes = restauranteRepository.findAll(comFreteGratis()
+                .and(comNomeSemelhantes(nome)));
 
         return ResponseEntity.ok(restaurantes);
     }
