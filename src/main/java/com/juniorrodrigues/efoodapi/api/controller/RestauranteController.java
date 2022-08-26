@@ -86,6 +86,13 @@ public class RestauranteController {
         return ResponseEntity.ok(restaurantes);
     }
 
+    @GetMapping("/busca-o-primeiro")
+    public ResponseEntity<Restaurante> buscaPrimeiroRestaurante(){
+        Optional<Restaurante> restaurante = restauranteRepository.findFirst();
+
+        return ResponseEntity.ok(restaurante.get());
+    }
+
     @GetMapping("/{restauranteId}")
     public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
         Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
