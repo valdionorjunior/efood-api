@@ -1,10 +1,13 @@
 package com.juniorrodrigues.efoodapi.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -22,9 +25,15 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-
     @ManyToOne
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
+
+    @JsonIgnore // para que não trazer essa proprieade a lista de restaurantes
+    @ManyToMany
+    @JoinTable(name = "restaurante_forma_pagamento", // customizar a tabela intermediaria para relacionamento NxN e propriedades
+        joinColumns = @JoinColumn(name = "restaurante_id"), // chave da tabela restaurante
+            inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")  ) // chave da tabela forma de pagamento
+    private List<FormaPagamento> formasPagamentos = new ArrayList<>();
 
 }
