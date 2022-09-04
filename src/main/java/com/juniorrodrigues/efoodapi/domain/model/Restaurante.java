@@ -29,6 +29,7 @@ public class Restaurante {
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
+    @JsonIgnore
     @Embedded // imcorpora a classe endereço como parte na entidade Restaurante
     private Endereco endereco;
 
