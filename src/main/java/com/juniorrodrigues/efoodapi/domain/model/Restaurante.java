@@ -29,6 +29,10 @@ public class Restaurante {
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
+    @JsonIgnore
+    @Embedded // imcorpora a classe endereço como parte na entidade Restaurante
+    private Endereco endereco;
+
     @JsonIgnore // para que não trazer essa proprieade a lista de restaurantes
     @ManyToMany
     @JoinTable(name = "restaurante_forma_pagamento", // customizar a tabela intermediaria para relacionamento NxN e propriedades
