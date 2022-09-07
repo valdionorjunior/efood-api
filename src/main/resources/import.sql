@@ -33,3 +33,10 @@ insert into grupo (nome) values ('READ');
 insert into grupo (nome) values ('WRITE');
 
 insert into grupo_premissao (grupo_id, permissao_id) values (1,1), (1,2), (1,3), (2,1), (3,2);
+
+insert into usuario (nome, email, senha, data_cadastro) values ('Valdionor Junior Rodrigues Gil', 'valdionor.teste@gmail.com', '123456', utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ('Macio Atalaia', 'atalaia.teste@gmail.com', '123456', utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ('Claudia Sphinela', 'sphinela.teste@gmail.com', '123456', utc_timestamp);
+insert into usuario (nome, email, senha, data_cadastro) values ('Manuel de Jesus', 'm-jesus.teste@gmail.com', '123456', utc_timestamp);
+
+insert into usuario_grupo (usuario_id, grupo_id) values (1,1), (1,2), (1,3), (2,2), (3,3), (4,2), (4,3);
