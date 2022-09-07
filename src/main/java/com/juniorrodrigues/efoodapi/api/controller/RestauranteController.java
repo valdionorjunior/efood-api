@@ -13,9 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comFreteGratis;
-import static com.juniorrodrigues.efoodapi.infrastructure.repository.spec.RestauranteSpecificationFactory.comNomeSemelhantes;
-
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -122,7 +119,8 @@ public class RestauranteController {
                 return ResponseEntity.notFound().build();
             }
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id", "formasPagamentos", "endereco");
+            BeanUtils.copyProperties(restaurante, restauranteAtual.get(),
+                    "id", "formasPagamentos", "endereco", "dataCadastro", "produtos"); //dataAtualizacao não precisa colocar pois @UpdateTime ja ignora quando for PUT
             cadastroRestauranteService.salvar(restauranteAtual.get());
             return ResponseEntity.ok(restauranteAtual.get());
         }catch (EntidadeNaoEncontradaException e ){
