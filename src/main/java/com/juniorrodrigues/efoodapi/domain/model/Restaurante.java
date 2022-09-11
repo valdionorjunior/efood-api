@@ -30,9 +30,8 @@ public class Restaurante {
     private BigDecimal taxaFrete;
 
     @JsonIgnore
-//    @JsonIgnoreProperties({"hibernateLazyInitializer"})
     //  @ManyToOne padrao defautl EAGER
-    @ManyToOne(fetch = FetchType.LAZY) // faz com que essas associação so carregue quando precisar -> FetchType.LAZY -> isso na busca - problema do N+1
+    @ManyToOne //(fetch = FetchType.LAZY) // faz com que essas associação so carregue quando precisar -> FetchType.LAZY -> isso na busca - problema do N+1
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
@@ -50,9 +49,9 @@ public class Restaurante {
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataAtualizacao; // LocalDateTime representa uma data/hora sem o localTime
 
-    @JsonIgnore // para que não trazer essa proprieade a lista de restaurantes
+//    @JsonIgnore // para que não trazer essa proprieade a lista de restaurantes
     //  @ManyToMany padrao defautl LAZY - na pratica dificilmente se usa EAGER pois pode alterar a escalabilidade da consulta pra uma curva muito alta
-    @ManyToMany(fetch = FetchType.EAGER) // faz com que essas associação so carregue tudo de forma anciosa -> FetchType.EAGER -> isso na busca - problema do N+1
+    @ManyToMany //(fetch = FetchType.EAGER) // faz com que essas associação so carregue tudo de forma anciosa -> FetchType.EAGER -> isso na busca - problema do N+1
     @JoinTable(name = "restaurante_forma_pagamento", // customizar a tabela intermediaria para relacionamento NxN e propriedades
         joinColumns = @JoinColumn(name = "restaurante_id"), // chave da tabela restaurante
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")  ) // chave da tabela forma de pagamento
