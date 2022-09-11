@@ -2,6 +2,7 @@ package com.juniorrodrigues.efoodapi.domain.repository;
 
 import com.juniorrodrigues.efoodapi.domain.model.Restaurante;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,10 @@ public interface RestauranteRepository
         extends CustomJpaRepository<Restaurante, Long>,
         RestauranteRepositoryQueries,
         JpaSpecificationExecutor<Restaurante> {
+
+
+    @Query("from Restaurante r join fetch r.cozinha left join fetch r.formasPagamentos") // QUERY PARA MATAR O PROBLEMA DO N+1 usando um findAll customizado
+    List<Restaurante> findAll();
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 
