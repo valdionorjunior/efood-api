@@ -24,6 +24,9 @@ public class Cozinha {
     @Column(nullable = false)
     private String nome;
 
+    @Column(name = "descricao")
+    private String descricao;
+
     @JsonIgnore // Ignora a propriedade abaixo na hora de serializar para evitar o erro de serialização recursiva bidirecial ex, cozinha qtem restaurante que tem cozinha que restaurante ...
     @OneToMany(mappedBy = "cozinha") // Associação bidirecional com a entidade restaurante onde a chave é a propriedade cozinha em restaurante
     private List<Restaurante> restaurantes = new ArrayList<>();
