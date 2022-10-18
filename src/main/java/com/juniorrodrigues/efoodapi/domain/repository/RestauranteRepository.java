@@ -16,7 +16,7 @@ public interface RestauranteRepository
         JpaSpecificationExecutor<Restaurante> {
 
 
-    @Query("from Restaurante r join fetch r.cozinha left join fetch r.formasPagamentos") // QUERY PARA MATAR O PROBLEMA DO N+1 usando um findAll customizado
+    @Query("from Restaurante r join fetch r.cozinha") // QUERY PARA MATAR O PROBLEMA DO N+1 usando um findAll customizado
     List<Restaurante> findAll();
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);

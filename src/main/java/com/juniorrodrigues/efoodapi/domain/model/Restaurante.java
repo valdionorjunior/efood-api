@@ -51,6 +51,7 @@ public class Restaurante {
 
 //    @JsonIgnore // para que não trazer essa proprieade a lista de restaurantes
     //  @ManyToMany padrao defautl LAZY - na pratica dificilmente se usa EAGER pois pode alterar a escalabilidade da consulta pra uma curva muito alta
+    @JsonIgnore
     @ManyToMany //(fetch = FetchType.EAGER) // faz com que essas associação so carregue tudo de forma anciosa -> FetchType.EAGER -> isso na busca - problema do N+1
     @JoinTable(name = "restaurante_forma_pagamento", // customizar a tabela intermediaria para relacionamento NxN e propriedades
         joinColumns = @JoinColumn(name = "restaurante_id"), // chave da tabela restaurante

@@ -23,7 +23,7 @@ public class Cozinha {
     //GET , SET EQUAL E HASH_CODE sendo gerado pela biblioteca do projeto lombok
     @Column(nullable = false)
     private String nome;
-
+    
     @JsonIgnore // Ignora a propriedade abaixo na hora de serializar para evitar o erro de serialização recursiva bidirecial ex, cozinha qtem restaurante que tem cozinha que restaurante ...
     @OneToMany(mappedBy = "cozinha") // Associação bidirecional com a entidade restaurante onde a chave é a propriedade cozinha em restaurante
     private List<Restaurante> restaurantes = new ArrayList<>();
