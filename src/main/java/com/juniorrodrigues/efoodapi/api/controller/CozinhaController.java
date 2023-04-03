@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -68,15 +69,21 @@ public class CozinhaController {
         return ResponseEntity.ok(cozinhaAtual.get());
     }
 
+//    @DeleteMapping("/{cozinhaId}")
+//    public ResponseEntity<?> remover(@PathVariable Long cozinhaId){
+//        try {
+//            cadastroCozinha.excluir(cozinhaId);
+//            return ResponseEntity.noContent().build();
+//        }catch ( EntidadeNaoEncontradaException e){
+//            return ResponseEntity.notFound().build();
+//        }catch (EntidadeEmUsoException e ){
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<?> remover(@PathVariable Long cozinhaId){
-        try {
-            cadastroCozinha.excluir(cozinhaId);
-            return ResponseEntity.noContent().build();
-        }catch ( EntidadeNaoEncontradaException e){
-            return ResponseEntity.notFound().build();
-        }catch (EntidadeEmUsoException e ){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cozinhaId){
+        cadastroCozinha.excluir(cozinhaId);
     }
 }
