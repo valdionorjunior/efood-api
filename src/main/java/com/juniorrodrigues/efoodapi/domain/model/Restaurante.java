@@ -29,7 +29,7 @@ public class Restaurante {
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 
-    @JsonIgnore
+//    @JsonIgnore
     //  @ManyToOne padrao defautl EAGER
     @ManyToOne //(fetch = FetchType.LAZY) // faz com que essas associação so carregue quando precisar -> FetchType.LAZY -> isso na busca - problema do N+1
     @JoinColumn(name = "cozinha_id", nullable = false)

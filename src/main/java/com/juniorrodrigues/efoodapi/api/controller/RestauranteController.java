@@ -91,65 +91,41 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId){
-        Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
-
-        if(!restaurante.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(restaurante.get());
+    public Restaurante buscar(@PathVariable Long restauranteId){
+        return cadastroRestauranteService.buscarOuFalhar(restauranteId);
     }
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) throws URISyntaxException {
-        try {
-            Restaurante restauranteCriado = cadastroRestauranteService.salvar(restaurante);
-            URI location = new URI("/"+restauranteCriado.getId());
-            return ResponseEntity.created(location).body(restauranteCriado);
-        }catch (EntidadeNaoEncontradaException e ){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+
+        return cadastroRestauranteService.salvar(restaurante);
+
     }
 
     @PutMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) throws URISyntaxException {
-        try {
-            Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
-            if(!restauranteAtual.isPresent()){
-                return ResponseEntity.notFound().build();
-            }
+    public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 
-            BeanUtils.copyProperties(restaurante, restauranteAtual.get(),
+            Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
+            BeanUtils.copyProperties(restaurante, restauranteAtual,
                     "id", "formasPagamentos", "endereco", "dataCadastro", "produtos"); //dataAtualizacao não precisa colocar pois @UpdateTime ja ignora quando for PUT
-            cadastroRestauranteService.salvar(restauranteAtual.get());
-            return ResponseEntity.ok(restauranteAtual.get());
-        }catch (EntidadeNaoEncontradaException e ){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+            return cadastroRestauranteService.salvar(restauranteAtual);
+
     }
 
     @DeleteMapping("/{restauranteId}")
-    ResponseEntity<?> remover(@PathVariable Long restauranteId) {
-        try{
-            cadastroRestauranteService.excluir(restauranteId);
-            return ResponseEntity.noContent().build();
-        }catch ( EntidadeNaoEncontradaException e){
-            return ResponseEntity.notFound().build();
-        }catch (EntidadeEmUsoException e ){
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public void remover(@PathVariable Long restauranteId) {
+        cadastroRestauranteService.excluir(restauranteId);
+
     }
 
     @PatchMapping("/{restauranteId}")
-    public ResponseEntity<?> atualizarParcial(@PathVariable Long restauranteId,
+    public Restaurante atualizarParcial(@PathVariable Long restauranteId,
                                               @RequestBody Map<String, Object> campos) throws URISyntaxException {
-        Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
-        if(!restauranteAtual.isPresent()){
-            return ResponseEntity.notFound().build();
-        }
+        Restaurante restauranteAtual = cadastroRestauranteService.buscarOuFalhar(restauranteId);
 
-        mergeObject(campos, restauranteAtual.get());
-        return atualizar(restauranteId, restauranteAtual.get());
+        mergeObject(campos, restauranteAtual);
+        return atualizar(restauranteId, restauranteAtual);
     }
 
     private void mergeObject(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
