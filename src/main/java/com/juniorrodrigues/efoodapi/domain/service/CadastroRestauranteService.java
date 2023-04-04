@@ -14,17 +14,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadastroRestauranteService {
 
+    public static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "Não existe um cadastro de restaurante codigo %d.";
+    public static final String MSG_RESTAURANTE_EM_USO = "Restaurante de cogido %d nao pode ser removido, pois esta em uso.";
     @Autowired
     RestauranteRepository restauranteRepository;
 
     @Autowired
     CozinhaRepository cozinhaRepository;
 
+    @Autowired
+    CadastroCozinhaService cadastroCozinhaService;
+
     public Restaurante salvar(Restaurante restaurante){
         Long cozinhaId = restaurante.getCozinha().getId();
-        Cozinha cozinha = cozinhaRepository.findById(cozinhaId)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                        String.format("Não existe um cadastro de cozinha com codigo %d.", cozinhaId)));
+        Cozinha cozinha = cadastroCozinhaService.buscarOuFalhar(cozinhaId);
 
         restaurante.setCozinha(cozinha);
         return restauranteRepository.save(restaurante);
@@ -35,12 +38,18 @@ public class CadastroRestauranteService {
             restauranteRepository.deleteById(restauranteId);
         }catch (EmptyResultDataAccessException e){
             throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de restaurante codigo %d.", restauranteId)
+                    String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)
             );
         }catch ( DataIntegrityViolationException e ){
             throw new EntidadeEmUsoException(
-                    String.format("Restaurante de cogido %d nao pode ser removido, pois esta em uso.", restauranteId)
+                    String.format(MSG_RESTAURANTE_EM_USO, restauranteId)
             );
         }
+    }
+
+    public Restaurante buscarOuFalhar(Long restauranteId) {
+        return restauranteRepository.findById(restauranteId)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException(
+                        String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
     }
 }
